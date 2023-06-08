@@ -45,7 +45,7 @@ jobs:
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASS }}
 
             - name: docker build
-              run: docker build -t ${{ secrets.DOCKER_USERNAME }}/spring_app .
+              run: docker build -t ssrinivaspadala/spring_app .
 
             - name: docker push
-              run: docker push ${{ secrets.DOCKER_USERNAME }}/spring_app
+              run: docker push ssrinivaspadala/spring_app
