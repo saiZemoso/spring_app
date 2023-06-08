@@ -1,0 +1,50 @@
+name: spring app
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+
+    build_app:
+
+        name: build the spring app
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: checkout dir
+              uses: actions/checkout@v3
+
+            - name: setup java
+              uses: actions/setup-java@v3
+              with:
+                java-version: '11'
+                distribution: 'temurin'
+                cache: maven
+
+            - name: build app
+              run: mvn clean install
+    
+    image:
+
+        name: docker iamge
+        runs-on: ubuntu-latest
+
+        steps:
+
+            - name: cache for docker
+              uses: actions/cache@v3
+              with:
+                path: var/lib/docker
+                key: ${{runner.os}}-docker-${{hashFiles('**/Dockerfile')}}
+                restore-keys: ${{runner.os}}-docker-
+
+            - name: docker login
+              run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASS }}
+
+            - name: docker build
+              run: docker build -t ${{ secrets.DOCKER_USERNAME }}/spring_app -f Dockerfile .
+
+            - name: docker push
+              run: docker push ${{ secrets.DOCKER_USERNAME }}/spring_app
