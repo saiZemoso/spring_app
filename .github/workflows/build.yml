@@ -28,7 +28,7 @@ jobs:
     
     image:
 
-        name: docker iamge
+        name: docker image
         runs-on: ubuntu-latest
 
         steps:
